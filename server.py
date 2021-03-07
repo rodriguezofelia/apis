@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from pprint import pformat
 import os
 import requests
+import secrets
 
 
 app = Flask(__name__)
@@ -41,7 +42,12 @@ def find_afterparties():
     sort = request.args.get('sort', '')
 
     url = 'https://app.ticketmaster.com/discovery/v2/events'
-    payload = {'apikey': API_KEY}
+    payload = {'apikey': TICKETMASTER_KEY, 
+                'postcalCode': postalcode, 
+                'keyword': keyword, 
+                'radius': radius, 
+                'unit': unit, 
+                'sort': sort}
 
     # TODO: Make a request to the Event Search endpoint to search for events
     #
@@ -53,6 +59,10 @@ def find_afterparties():
     #
     # - Replace the empty list in `events` with the list of events from your
     #   search results
+
+    req = requests.get(url, params=payload)
+    """Makes request to event search endpoint and passing all params"""
+
 
     data = {'Test': ['This is just some test data'],
             'page': {'totalElements': 1}}
