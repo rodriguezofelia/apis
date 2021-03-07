@@ -71,24 +71,28 @@ def find_afterparties():
 def get_event_details(id):
     """View the details of an event."""
 
-    url = 'https://app.ticketmaster.com/discovery/v2/events/{id}'
+    url = f'https://app.ticketmaster.com/discovery/v2/events/{id}'
     payload = {'apikey': API_KEY}
 
     res = requests.get(url, params=payload)
     """Makes request to event search endpoint and passing all params"""
 
-    data = res.json()
+    event = res.json()
     """Parses and saves JSON received in the response to data"""
 
-    events = data['_embedded']['events']
-    event_name = data['name']
-    # EVENT IMAGE URL
-    # EVENT TICKETMASTER URL
-    # EVENT START DATE
-    """Accessing the dictionary at data embedded with another dictionary of events"""
-    print(event_name)
-    return render_template('event-details.html')
+    if '_embedded' not in event.keys():
+        """"If no venues are listed, go to /event with no venue details"""
+        return render_template('event-details.html', 
+                            event=event
+                            )
 
+    venues = event['_embedded']['venues']
+    """Accessing the dictionary at event and accessing dictiionary at embedded"""
+
+    return render_template('event-details.html', 
+                            event=event, 
+                            venues=venues
+                            )
 
 if __name__ == '__main__':
     app.debug = True
