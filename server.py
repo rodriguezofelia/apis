@@ -71,8 +71,22 @@ def find_afterparties():
 def get_event_details(id):
     """View the details of an event."""
 
-    # TODO: Finish implementing this view function
+    url = 'https://app.ticketmaster.com/discovery/v2/events/{id}'
+    payload = {'apikey': API_KEY}
 
+    res = requests.get(url, params=payload)
+    """Makes request to event search endpoint and passing all params"""
+
+    data = res.json()
+    """Parses and saves JSON received in the response to data"""
+
+    events = data['_embedded']['events']
+    event_name = data['name']
+    # EVENT IMAGE URL
+    # EVENT TICKETMASTER URL
+    # EVENT START DATE
+    """Accessing the dictionary at data embedded with another dictionary of events"""
+    print(event_name)
     return render_template('event-details.html')
 
 
